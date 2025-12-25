@@ -33,6 +33,8 @@ Edite o Script Shell colocando o nome dos seus file .ovpn
 Feito isso é só mover os arquivos .ovpn para seu diretorio oculto (.vpn).
 
         chmod 440 ~/.vpn
+
+Rode o script: 
 ```BASH
 vpn
 ```
