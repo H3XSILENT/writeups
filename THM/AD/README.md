@@ -7,4 +7,4 @@ Não espero que seja um trópico simples (e não sera).
 
 ## Estrutura
 
-![estrutura](images/AD.svg)
+![estrutura](img/diagrama.png)
