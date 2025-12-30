@@ -6,4 +6,5 @@ Literalmente, se você quiser ser um pentest corporativo você precisará de AD.
 Não espero que seja um trópico simples (e não sera).
 
 ## Estrutura
+
 ![estrutura](images/AD.svg)
