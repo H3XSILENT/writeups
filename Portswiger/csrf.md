@@ -93,7 +93,7 @@ Vamos criar um site simples:
 </html>
          
 ```
-Observe que conseguimos alterar o email do labarotarorio:
+Observe que conseguimos alterar o email do laboratorio:
 
 ![changethis.gif](assets/img/changethis.gif)
 
@@ -117,3 +117,5 @@ Agora vamos nos dar mais um passo na criação do site:
 Com isso agora o nosso site  faz a alteração em 5s sem necessidade da interação da vitima.
 
 ![changerhidden.gif](assets/img/changerhidden.gif)
+
+Para resolvermos o challanger nao precisamos dessa ultima alteração
