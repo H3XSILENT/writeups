@@ -1,5 +1,5 @@
 # Binarios e Hexas
-Tudo no computador é feito em binarios (0-1).
+[Tudo no computador é feito em binarios (0-1).](https://github.com/rv157244/Assembly-Language/blob/main/foundation/binary-numbers.md)
 
 usar o comando xxd para ler:
 
