@@ -27,7 +27,7 @@ Learn how computers work by building and programming a computer with the classic
 
 ---
 
-copiling [blink.s](blink.s):
+copiling [blink.s](blink.asm):
 
 ```bash
 vasm6502_oldstyle -Fbin -dot blink.s
