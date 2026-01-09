@@ -1,0 +1,18 @@
+<html>
+<h1>Redirect Site</h1>
+
+<form action="" method="GET">
+<input type="search" name="pesquisa" placeholder="pesquisar...">
+<input type="submit" value="enter" style="background-color:blue;color:white;border:none;border-radius:15px;">
+</form>
+
+<?php
+
+header("Content-Security-Policy: script-src 'self';");
+
+if(isset($_GET['pesquisa'])){
+        echo "Não encontramos nenhuma resposta para:".$_GET['pesquisa'];
+}
+?>
+  
+</html>    
