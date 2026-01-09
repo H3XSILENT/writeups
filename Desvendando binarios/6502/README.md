@@ -23,12 +23,16 @@ Learn how computers work by building and programming a computer with the classic
 0xD000
 0xE000
 0xF000 - 0xFFFC-0xFFD (reset vector)
+```
+
 ---
 
 copiling [blink.s](blink.s):
+
 ```bash
 vasm6502_oldstyle -Fbin -dot blink.s
 ```
+
 copiling for arduino:
 ```bash
 hexdump -C a.out
