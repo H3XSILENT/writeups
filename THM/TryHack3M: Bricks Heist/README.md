@@ -70,7 +70,7 @@ Gobuster com wordiliste medium do dirbuster. Mas Vou pelo Mais Simples:
 
 Aqui Temos a versão do Worldpress:
 
-![](assets/img/version-wp.png)
+![](assets/img/vesion-wp.png)
 
 Pesquisei no goolge por exploit po essa versão e achei esse git: [K3ysTr0K3R](https://github.com/K3ysTr0K3R/CVE-2024-25600-EXPLOIT/blob/main/CVE-2024-25600.py)
 
@@ -86,7 +86,10 @@ E Rodei o Script Com:
 ```BASH
 python3 CVE.py -u https://bricks.thm
 ````
-e vua lá!
+
+#### e vua lá!
+
 ![](assets/img/shell.png)
 
+--- 
 ## Initial Acess
