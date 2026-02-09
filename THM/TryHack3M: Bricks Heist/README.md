@@ -151,7 +151,7 @@ Está presente no arquivo localizado nesse diretório.
 > The wallet address used has been involved in transactions between wallets belonging to which threat group?
 
 
-![assets/img/wattlet.webm](assets/img/wattlet.webm)
+![assets/img/wattlet.webm](assets/img/wattlet.webp)
 
 ***
 
