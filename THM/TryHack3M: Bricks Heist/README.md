@@ -1,16 +1,19 @@
+
 # TryHack3M: Bricks Heist
 
 > Crack the code, command the exploit! Dive into the heart of the system with just an RCE CVE as your key.
 
-Essa é a descrição da maquina hahaha. Vamos pra cima!
+Essa é a descrição da máquina hahaha. Vamos pra cima!
 
- ---
-# Recon
-Recebemos o IP `10.65.138.10`
+***
 
-Testar comunicações e verificar oque temos rodando.
+## Recon  
 
-```BASH
+Recebemos o IP `10.65.138.10`.
+
+Primeiro passo: testar comunicações e verificar o que temos rodando.
+
+```bash
 ┌──(kali㉿kali)-[~]
 └─$ ping 10.65.138.10
 PING 10.65.138.10 (10.65.138.10) 56(84) bytes of data.
@@ -20,43 +23,48 @@ PING 10.65.138.10 (10.65.138.10) 56(84) bytes of data.
 --- 10.65.138.10 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1001ms
 rtt min/avg/max/mdev = 242.244/253.665/265.087/11.421 ms
-                                                                                                                                                                                                                                            
+```
+
+Depois disso, usei o `curl` para ver o que o servidor retorna:
+
+```bash
 ┌──(kali㉿kali)-[~]
 └─$ curl 10.65.138.10 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
         "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <title>Error response</title>
-    </head>
-    <body>
-        <h1>Error response</h1>
-        <p>Error code: 405</p>
-        <p>Message: Method Not Allowed.</p>
-        <p>Error code explanation: 405 - Specified method is invalid for this resource.</p>
-    </body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Error response</title>
+  </head>
+  <body>
+    <h1>Error response</h1>
+    <p>Error code: 405</p>
+    <p>Message: Method Not Allowed.</p>
+    <p>Error code explanation: 405 - Specified method is invalid for this resource.</p>
+  </body>
 </html>
 ```
-Nesse momento pus o nmap para funcionar e aproveitei a deixa, para configurar o hosts:
 
-```BASH
+Nesse momento, deixei o **nmap** rodando e aproveitei para configurar o **/etc/hosts**:
+
+```bash
 ┌──(root㉿kali)-[/home/kali]
 └─# echo "10.65.138.10 bricks.thm" >> /etc/hosts
 ```
-Aproveitanso esse momento vamos, ao dominio bricks.
 
-Recebemos um error 405:
+Aproveitando esse momento, acessei o domínio `bricks.thm`.
 
-![](assets/img/fail.png)
+Recebi um **erro 405**:
 
-Por outro lado o nmap retornou o seguinte resultado:
+![assets/img/fail.png](assets/img/fail.png)
 
-```BASH
+Por outro lado, o **nmap** retornou o seguinte resultado:
+
+```bash
 ┌──(root㉿kali)-[/home/kali]
-└─# nmap -sV -n -sS  10.65.138.10 -T5   
-PORT     STATE SERVICE  VERSION<img width="687" height="364" alt="fail" src="https://github.com/user-attachments/assets/8163c5aa-b07a-47be-b709-f6a54729af67" />
-
+└─# nmap -sV -n -sS 10.65.138.10 -T5
+PORT     STATE SERVICE  VERSION
 22/tcp   open  ssh      OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 (Ubuntu Linux; protocol 2.0)
 80/tcp   open  http     Python http.server 3.5 - 3.10
 443/tcp  open  ssl/http Apache httpd
@@ -64,32 +72,92 @@ PORT     STATE SERVICE  VERSION<img width="687" height="364" alt="fail" src="htt
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-Bom, Seguindo a dica: `What is the content of the hidden .txt file in the web folder?`.
+***
 
-Gobuster com wordiliste medium do dirbuster. Mas Vou pelo Mais Simples:
+## Exploração  
 
-Aqui Temos a versão do Worldpress:
+Seguindo a dica: `What is the content of the hidden .txt file in the web folder?`
 
-![](assets/img/vesion-wp.png)
+Poderia usar um scanner, mas decidi ir pelo modo manual.
 
-Pesquisei no goolge por exploit po essa versão e achei esse git: [K3ysTr0K3R](https://github.com/K3ysTr0K3R/CVE-2024-25600-EXPLOIT/blob/main/CVE-2024-25600.py)
+Identificamos a versão do **WordPress**:
 
-Instalei os requerimentos com:
 
-```BASH
+
+Pesquisei no Google por exploit dessa versão e encontrei este repositório:  
+[K3ysTr0K3R — CVE-2024-25600 Exploit](https://github.com/K3ysTr0K3R/CVE-2024-25600-EXPLOIT/blob/main/CVE-2024-25600.py)
+
+Instalei os requisitos com:
+
+```bash
 sudo apt update
 sudo apt install python3-requests python3-bs4 python3-prompt-toolkit python3-rich
 ```
 
-E Rodei o Script Com:
+E rodei o script com:
 
-```BASH
+```bash
 python3 CVE.py -u https://bricks.thm
-````
+```
 
-#### e vua lá!
+#### E voilà!
 
-![](assets/img/shell.png)
+![assets/img/shell.png](assets/img/shell.png)
 
---- 
-## Initial Acess
+***
+
+## Initial Access  
+
+Respondendo às perguntas:
+
+> What is the content of the hidden .txt file in the web folder?
+
+```bash
+Shell> ls
+650c844110baced87e1606453b93f22a.txt
+```
+
+> What is the name of the suspicious process?
+
+Dica: é um minerador 
+Use:
+
+```bash
+ps -ef
+```
+
+> What is the service name affiliated with the suspicious process?
+
+```bash
+systemctl list-units --type=service
+```
+
+> What is the log file name of the miner instance?
+
+Confesso que travei um pouco aqui 😂  
+Mas encontrei a dica no diretório:
+
+```bash
+cd /lib/NetworkManager
+```
+
+> What is the wallet address of the miner instance?
+
+Está presente no arquivo localizado nesse diretório.
+
+
+![assets/img/cyberchief.png](assets/img/cyberchief.png)
+
+> The wallet address used has been involved in transactions between wallets belonging to which threat group?
+
+
+![assets/img/wattlet.webm](assets/img/wattlet.webm)
+
+***
+
+## Aprendizados  
+
+- Senhas do WordPress são salvas em `wp-config.php`  
+- Fixação de processos: `ps -ef`, `ps -a`, e `systemctl list-units --type=service`  
+- Uso do **CyberChef** para análise e decodificação  
+- Uso de **reverse shell** (revShell) para manutenção do acesso  
