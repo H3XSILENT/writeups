@@ -82,7 +82,7 @@ Poderia usar um scanner, mas decidi ir pelo modo manual.
 
 Identificamos a versão do **WordPress**:
 
-![](assets/img/wp-version.png)
+![](assets/img/vesion-wp.png)
 
 Pesquisei no Google por exploit dessa versão e encontrei este repositório:  
 [K3ysTr0K3R — CVE-2024-25600 Exploit](https://github.com/K3ysTr0K3R/CVE-2024-25600-EXPLOIT/blob/main/CVE-2024-25600.py)
