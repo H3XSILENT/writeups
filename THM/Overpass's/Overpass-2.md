@@ -4,14 +4,6 @@ Eai galera, vamos para mais uma!
 
 ![](img/a5800e570e78bcf5526fe0ce1a245d21.png)
 
-<style>
-  .centralizar {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-</style>
-
 Nessa sala teremos:
 
 *
@@ -57,9 +49,8 @@ backups                 [Status: 301, Size: 237, Words: 14, Lines: 8, Duration: 
 
 Conferindo a web page, temos um arquivo:
 
-<div align="center">
- ![](img/d6a8dbd246d20b3a7a3d8c265b170aac.png){: .centralizar} 
-</div>   
+
+ ![](img/d6a8dbd246d20b3a7a3d8c265b170aac.png) 
 
 ```BASH
 unzip backup.zip                           
@@ -129,7 +120,7 @@ ftp>
 
 Agora é só recuperarmos nossa shell!
 
-![](img/003c988e24e5266eefccf77227d8ab45.gif){: .centralizar}
+![](img/003c988e24e5266eefccf77227d8ab45.gif)
 
 Depois de uma breve eumeração, temos os seguintes usuarios na maquina:
 
@@ -259,7 +250,7 @@ bash  user.flag
 ```
 De volta ao termianal com ssh (james):
 
-![](img/1949450bac52e00ac32250f0d49fa960.png){: .centralizar}
+![](img/1949450bac52e00ac32250f0d49fa960.png)
 
 ---
 Obrigado por ler; Abaixo está o Artigo que mencionei
